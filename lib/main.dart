@@ -11,6 +11,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => Signin(),
         '/signup': (context) => Signup(),
         '/exam': (context) => ExamPage(),
-        'writeanswer': (context) => WriteAnswerPage(),
+        'writeanswer': (context) => const WriteAnswerPage(),
         '/speechanswer': (context) => SpeechAnswerPage(),
         '/preview': (context) => PreviewPage(answer: ''),
       },

@@ -5,7 +5,7 @@ import 'AnsweredQuestionsPage.dart';
 class PreviewPage extends StatelessWidget {
   final String answer;
 
-  PreviewPage({required this.answer});
+  const PreviewPage({super.key, required this.answer});
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +13,13 @@ class PreviewPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Preview',
           style: TextStyle(color: Colors.deepPurple),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.videocam, color: Colors.deepPurple),
+            icon: const Icon(Icons.videocam, color: Colors.deepPurple),
             onPressed: () {
               // Add proctoring video action here if needed
             },
@@ -31,23 +31,23 @@ class PreviewPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Preview of Your Answer:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Container(
-              padding: EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(12.0),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Text(
                 answer.isEmpty ? "No answer provided." : answer,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -57,12 +57,12 @@ class PreviewPage extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Edit',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -72,17 +72,17 @@ class PreviewPage extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => WriteAnswerPage()),
+                          builder: (context) => const WriteAnswerPage()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Write Again',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -103,12 +103,12 @@ class PreviewPage extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Save Answer',
                     style: TextStyle(color: Colors.white),
                   ),

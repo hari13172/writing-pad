@@ -6,6 +6,8 @@ import 'dart:async';
 import 'SpeechAnswerPage.dart';
 
 class ExamPage extends StatefulWidget {
+  const ExamPage({super.key});
+
   @override
   _ExamPageState createState() => _ExamPageState();
 }
@@ -36,7 +38,7 @@ class _ExamPageState extends State<ExamPage> {
   }
 
   void startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _secondsElapsed++;
       });
@@ -59,15 +61,15 @@ class _ExamPageState extends State<ExamPage> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text("Exam Complete"),
-          content: Text("You have completed all questions."),
+          title: const Text("Exam Complete"),
+          content: const Text("You have completed all questions."),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(ctx).pop();
                 Navigator.of(context).pop(); // Go back to previous page
               },
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         ),
@@ -91,7 +93,7 @@ class _ExamPageState extends State<ExamPage> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.videocam, color: Colors.deepPurple),
+            icon: const Icon(Icons.videocam, color: Colors.deepPurple),
             onPressed: () {},
           ),
         ],
@@ -104,7 +106,7 @@ class _ExamPageState extends State<ExamPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Progress',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
@@ -112,41 +114,41 @@ class _ExamPageState extends State<ExamPage> {
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'EXIT',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             LinearProgressIndicator(
               value: _getProgressValue(),
               backgroundColor: Colors.grey[300],
               color: Colors.deepPurple,
               minHeight: 8,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Time: ${getFormattedTime()}',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               'Question ${currentQuestionIndex + 1}/${questions.length}:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               questions[currentQuestionIndex],
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -158,14 +160,14 @@ class _ExamPageState extends State<ExamPage> {
                           builder: (context) => SpeechAnswerPage()),
                     );
                   },
-                  icon: Icon(Icons.mic, color: Colors.white),
-                  label: Text(
+                  icon: const Icon(Icons.mic, color: Colors.white),
+                  label: const Text(
                     'SPEECH',
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -176,17 +178,17 @@ class _ExamPageState extends State<ExamPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => WriteAnswerPage()),
+                          builder: (context) => const WriteAnswerPage()),
                     );
                   },
-                  icon: Icon(Icons.edit, color: Colors.white),
-                  label: Text(
+                  icon: const Icon(Icons.edit, color: Colors.white),
+                  label: const Text(
                     'WRITE',
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -194,7 +196,7 @@ class _ExamPageState extends State<ExamPage> {
                 ),
               ],
             ),
-            SizedBox(height: 10), // Space between the rows
+            const SizedBox(height: 10), // Space between the rows
             Center(
               child: ElevatedButton.icon(
                 onPressed: () {
@@ -202,24 +204,24 @@ class _ExamPageState extends State<ExamPage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            SpeechText()), // Route to SpeechText page
+                            const SpeechText()), // Route to SpeechText page
                   );
                 },
-                icon: Icon(Icons.speaker, color: Colors.white),
-                label: Text(
+                icon: const Icon(Icons.speaker, color: Colors.white),
+                label: const Text(
                   'SPEAK',
                   style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -229,12 +231,12 @@ class _ExamPageState extends State<ExamPage> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'BACK',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -243,12 +245,12 @@ class _ExamPageState extends State<ExamPage> {
                   onPressed: _nextQuestion,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'NEXT',
                     style: TextStyle(color: Colors.white),
                   ),

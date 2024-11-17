@@ -5,6 +5,8 @@ import 'package:signature/signature.dart';
 import 'package:http/http.dart' as http;
 
 class WriteAnswerPage extends StatefulWidget {
+  const WriteAnswerPage({Key? key}) : super(key: key);
+
   @override
   _WriteAnswerPageState createState() => _WriteAnswerPageState();
 }
@@ -16,35 +18,50 @@ class _WriteAnswerPageState extends State<WriteAnswerPage> {
     exportBackgroundColor: Colors.white,
   );
 
-  String _recognizedText =
-      "Your recognized text will appear here."; // Placeholder for recognized text
+  String _recognizedText = "Your recognized text will appear here.";
+  bool _isLoading = false; // Track loading state
 
-  Future<void> _recognizeHandwriting() async {
+  Future<void> _sendCanvasToBackend() async {
     if (_signatureController.isNotEmpty) {
+      setState(() {
+        _isLoading = true; // Start loading
+      });
+
       final Uint8List? imageBytes = await _signatureController.toPngBytes();
 
       if (imageBytes != null) {
-        // Send the image to your backend
+        final base64Image = base64Encode(imageBytes);
+
+        final url = Uri.parse('http://192.168.1.4:8090/convert-to-text');
         final response = await http.post(
-          Uri.parse("https://your-backend-endpoint/recognize"),
+          url,
           headers: {"Content-Type": "application/json"},
-          body: json.encode({"image": base64Encode(imageBytes)}),
+          body: jsonEncode({"image_base64": base64Image}),
         );
 
         if (response.statusCode == 200) {
           setState(() {
-            _recognizedText = json.decode(response.body)["text"];
+            _recognizedText = jsonDecode(response.body)['text'];
           });
         } else {
-          print("Error in recognition: ${response.body}");
+          setState(() {
+            _recognizedText = "Error: Unable to recognize text.";
+          });
         }
       }
+
+      setState(() {
+        _isLoading = false; // End loading
+      });
+
+      // Clear signature after 3 seconds
+      Future.delayed(const Duration(seconds: 3), _clearSignature);
     }
   }
 
   @override
   void dispose() {
-    _signatureController.dispose(); // Dispose of the controller
+    _signatureController.dispose();
     super.dispose();
   }
 
@@ -59,7 +76,7 @@ class _WriteAnswerPageState extends State<WriteAnswerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Handwriting to Text'),
+        title: const Text('Handwriting to Text'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -78,24 +95,33 @@ class _WriteAnswerPageState extends State<WriteAnswerPage> {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
                   onPressed: _clearSignature,
-                  child: Text('Clear'),
+                  child: const Text('Clear'),
                 ),
                 ElevatedButton(
-                  onPressed: _recognizeHandwriting,
-                  child: Text('Recognize Text'),
+                  onPressed: _isLoading ? null : _sendCanvasToBackend,
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text('Convert to Text'),
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               _recognizedText,
-              style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+              style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
             ),
           ],
         ),

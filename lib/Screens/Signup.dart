@@ -12,6 +12,8 @@ class Signup extends StatelessWidget {
   final TextEditingController registerNumberController =
       TextEditingController();
 
+  Signup({super.key});
+
   void _saveUserData() {
     UserData user = UserData();
     user.name = nameController.text;
@@ -29,7 +31,7 @@ class Signup extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.deepPurple),
+          icon: const Icon(Icons.arrow_back, color: Colors.deepPurple),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -48,7 +50,7 @@ class Signup extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Student Detail Form',
                 style: TextStyle(
                   fontSize: 28,
@@ -56,7 +58,7 @@ class Signup extends StatelessWidget {
                   color: Colors.deepPurple,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: nameController,
                 decoration: InputDecoration(
@@ -66,7 +68,7 @@ class Signup extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: collegeController,
                 decoration: InputDecoration(
@@ -76,7 +78,7 @@ class Signup extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: dobController,
                 decoration: InputDecoration(
@@ -87,7 +89,7 @@ class Signup extends StatelessWidget {
                 ),
                 keyboardType: TextInputType.datetime,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: disabilityController,
                 decoration: InputDecoration(
@@ -97,7 +99,7 @@ class Signup extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: examModeController,
                 decoration: InputDecoration(
@@ -107,7 +109,7 @@ class Signup extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: registerNumberController,
                 decoration: InputDecoration(
@@ -118,7 +120,7 @@ class Signup extends StatelessWidget {
                 ),
                 keyboardType: TextInputType.text,
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
@@ -131,18 +133,18 @@ class Signup extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Sign Up',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
@@ -154,13 +156,13 @@ class Signup extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     backgroundColor: Colors.blue,
                   ),
-                  child: Text(
+                  child: const Text(
                     'Go to Exam Page',
                     style: TextStyle(fontSize: 18),
                   ),
