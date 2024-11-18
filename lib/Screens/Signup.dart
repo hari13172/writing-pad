@@ -26,6 +26,8 @@ class Signup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Access the current theme
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -50,75 +52,48 @@ class Signup extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Student Detail Form',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
+                style: theme.textTheme.displayLarge?.copyWith(
+                  color: Colors.deepPurple, // Adjust color if needed
                 ),
               ),
               const SizedBox(height: 20),
-              TextField(
+              _buildTextField(
+                context,
                 controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                label: 'Name',
               ),
               const SizedBox(height: 20),
-              TextField(
+              _buildTextField(
+                context,
                 controller: collegeController,
-                decoration: InputDecoration(
-                  labelText: 'College Name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                label: 'College Name',
               ),
               const SizedBox(height: 20),
-              TextField(
+              _buildTextField(
+                context,
                 controller: dobController,
-                decoration: InputDecoration(
-                  labelText: 'DOB',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                label: 'DOB',
                 keyboardType: TextInputType.datetime,
               ),
               const SizedBox(height: 20),
-              TextField(
+              _buildTextField(
+                context,
                 controller: disabilityController,
-                decoration: InputDecoration(
-                  labelText: 'Disability Type',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                label: 'Disability Type',
               ),
               const SizedBox(height: 20),
-              TextField(
+              _buildTextField(
+                context,
                 controller: examModeController,
-                decoration: InputDecoration(
-                  labelText: 'Exam Mode',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                label: 'Exam Mode',
               ),
               const SizedBox(height: 20),
-              TextField(
+              _buildTextField(
+                context,
                 controller: registerNumberController,
-                decoration: InputDecoration(
-                  labelText: 'Register Number',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                keyboardType: TextInputType.text,
+                label: 'Register Number',
               ),
               const SizedBox(height: 30),
               Center(
@@ -133,10 +108,8 @@ class Signup extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
                   ),
                   child: const Text(
                     'Sign Up',
@@ -156,10 +129,8 @@ class Signup extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
                     backgroundColor: Colors.blue,
                   ),
                   child: const Text(
@@ -172,6 +143,27 @@ class Signup extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  // Helper function to build a styled TextField
+  Widget _buildTextField(
+    BuildContext context, {
+    required TextEditingController controller,
+    required String label,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    final theme = Theme.of(context);
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: theme.textTheme.labelLarge, // Use global label style
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+      keyboardType: keyboardType,
     );
   }
 }

@@ -5,11 +5,14 @@
 <uses-permission android:name="android.permission.BLUETOOTH"/>
 <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 
        <!-- Add this permission for microphone access -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <application
-        android:label="newapp"
+        android:label="WriteSmart"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
