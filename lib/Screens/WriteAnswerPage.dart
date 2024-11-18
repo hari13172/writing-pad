@@ -68,7 +68,7 @@ class _WriteAnswerPageState extends State<WriteAnswerPage> {
     }
 
     final base64Image = base64Encode(imageBytes);
-    final url = Uri.parse('http://10.5.0.6:8090/convert-to-text'); // Replace with your backend URL
+    final url = Uri.parse('http://10.5.0.8:8090/convert-to-text'); // Replace with your backend URL
 
     try {
       final response = await http.post(
