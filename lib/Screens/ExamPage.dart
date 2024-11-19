@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:new_app/Screens/PreviewPage.dart';
+import 'package:new_app/Screens/ReviewPage.dart';
 import 'package:new_app/Screens/WriteAnswerPage.dart';
 import 'package:new_app/Screens/speech_to_text.dart';
 import 'dart:async';
-import 'SpeechAnswerPage.dart';
 
 class ExamPage extends StatefulWidget {
+  const ExamPage({super.key});
+
   @override
   _ExamPageState createState() => _ExamPageState();
 }
@@ -36,7 +37,7 @@ class _ExamPageState extends State<ExamPage> {
   }
 
   void startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _secondsElapsed++;
       });
@@ -55,19 +56,24 @@ class _ExamPageState extends State<ExamPage> {
         currentQuestionIndex++;
       });
     } else {
-      // Show completion message
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text("Exam Complete"),
-          content: Text("You have completed all questions."),
+          title: Text(
+            "Exam Complete",
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          content: Text(
+            "You have completed all questions.",
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(ctx).pop();
-                Navigator.of(context).pop(); // Go back to previous page
+                Navigator.of(context).pop();
               },
-              child: Text("OK"),
+              child: const Text("OK"),
             ),
           ],
         ),
@@ -81,6 +87,8 @@ class _ExamPageState extends State<ExamPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Access the current theme
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -91,7 +99,7 @@ class _ExamPageState extends State<ExamPage> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.videocam, color: Colors.deepPurple),
+            icon: const Icon(Icons.videocam, color: Colors.deepPurple),
             onPressed: () {},
           ),
         ],
@@ -106,47 +114,34 @@ class _ExamPageState extends State<ExamPage> {
               children: [
                 Text(
                   'Progress',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    'EXIT',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  style: theme.textTheme.bodyLarge,
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             LinearProgressIndicator(
               value: _getProgressValue(),
-              backgroundColor: Colors.grey[300],
-              color: Colors.deepPurple,
+              backgroundColor: theme.colorScheme.surface,
+              color: theme.primaryColor,
               minHeight: 8,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Time: ${getFormattedTime()}',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: theme.textTheme.bodyLarge,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               'Question ${currentQuestionIndex + 1}/${questions.length}:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: theme.textTheme.displayLarge,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               questions[currentQuestionIndex],
-              style: TextStyle(fontSize: 16),
+              style: theme.textTheme.bodyLarge,
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
+            // Combined Speak and Write Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -155,38 +150,40 @@ class _ExamPageState extends State<ExamPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SpeechAnswerPage()),
+                        builder: (context) => const WriteAnswerPage(),
+                      ),
                     );
                   },
-                  icon: Icon(Icons.mic, color: Colors.white),
-                  label: Text(
-                    'SPEECH',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => WriteAnswerPage()),
-                    );
-                  },
-                  icon: Icon(Icons.edit, color: Colors.white),
-                  label: Text(
+                  icon: const Icon(Icons.edit, color: Colors.white),
+                  label: const Text(
                     'WRITE',
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    backgroundColor: theme.primaryColor,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SpeechText(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.mic, color: Colors.white),
+                  label: const Text(
+                    'SPEAK',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.secondary,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -194,47 +191,57 @@ class _ExamPageState extends State<ExamPage> {
                 ),
               ],
             ),
-            SizedBox(height: 10), // Space between the rows
-            Center(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            SpeechText()), // Route to SpeechText page
-                  );
-                },
-                icon: Icon(Icons.speaker, color: Colors.white),
-                label: Text(
-                  'SPEAK',
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-            ),
-            Spacer(),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    if (currentQuestionIndex > 0) {
+                      setState(() {
+                        currentQuestionIndex--;
+                      });
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: Text(
+                            "Terminate Exam",
+                            style: theme.textTheme.bodyLarge,
+                          ),
+                          content: Text(
+                            "Are you sure you want to terminate the exam?",
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(ctx).pop(); // Close the dialog
+                              },
+                              child: const Text("No"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(ctx).pop(); // Close the dialog
+                                Navigator.of(context).pushReplacementNamed(
+                                    '/'); // Go to login page
+                              },
+                              child: const Text("Yes"),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    backgroundColor: theme.colorScheme.error,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'BACK',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -242,13 +249,14 @@ class _ExamPageState extends State<ExamPage> {
                 ElevatedButton(
                   onPressed: _nextQuestion,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    backgroundColor: theme.colorScheme.primary,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'NEXT',
                     style: TextStyle(color: Colors.white),
                   ),

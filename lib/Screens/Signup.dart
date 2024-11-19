@@ -12,6 +12,8 @@ class Signup extends StatelessWidget {
   final TextEditingController registerNumberController =
       TextEditingController();
 
+  Signup({super.key});
+
   void _saveUserData() {
     UserData user = UserData();
     user.name = nameController.text;
@@ -24,12 +26,14 @@ class Signup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Access the current theme
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.deepPurple),
+          icon: const Icon(Icons.arrow_back, color: Colors.deepPurple),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -50,75 +54,48 @@ class Signup extends StatelessWidget {
             children: [
               Text(
                 'Student Detail Form',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
+                style: theme.textTheme.displayLarge?.copyWith(
+                  color: Colors.deepPurple, // Adjust color if needed
                 ),
               ),
-              SizedBox(height: 20),
-              TextField(
+              const SizedBox(height: 20),
+              _buildTextField(
+                context,
                 controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                label: 'Name',
               ),
-              SizedBox(height: 20),
-              TextField(
+              const SizedBox(height: 20),
+              _buildTextField(
+                context,
                 controller: collegeController,
-                decoration: InputDecoration(
-                  labelText: 'College Name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                label: 'College Name',
               ),
-              SizedBox(height: 20),
-              TextField(
+              const SizedBox(height: 20),
+              _buildTextField(
+                context,
                 controller: dobController,
-                decoration: InputDecoration(
-                  labelText: 'DOB',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                label: 'DOB',
                 keyboardType: TextInputType.datetime,
               ),
-              SizedBox(height: 20),
-              TextField(
+              const SizedBox(height: 20),
+              _buildTextField(
+                context,
                 controller: disabilityController,
-                decoration: InputDecoration(
-                  labelText: 'Disability Type',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                label: 'Disability Type',
               ),
-              SizedBox(height: 20),
-              TextField(
+              const SizedBox(height: 20),
+              _buildTextField(
+                context,
                 controller: examModeController,
-                decoration: InputDecoration(
-                  labelText: 'Exam Mode',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                label: 'Exam Mode',
               ),
-              SizedBox(height: 20),
-              TextField(
+              const SizedBox(height: 20),
+              _buildTextField(
+                context,
                 controller: registerNumberController,
-                decoration: InputDecoration(
-                  labelText: 'Register Number',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                keyboardType: TextInputType.text,
+                label: 'Register Number',
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
@@ -131,18 +108,16 @@ class Signup extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Sign Up',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
@@ -154,13 +129,11 @@ class Signup extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
                     backgroundColor: Colors.blue,
                   ),
-                  child: Text(
+                  child: const Text(
                     'Go to Exam Page',
                     style: TextStyle(fontSize: 18),
                   ),
@@ -170,6 +143,27 @@ class Signup extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  // Helper function to build a styled TextField
+  Widget _buildTextField(
+    BuildContext context, {
+    required TextEditingController controller,
+    required String label,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    final theme = Theme.of(context);
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: theme.textTheme.labelLarge, // Use global label style
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+      keyboardType: keyboardType,
     );
   }
 }

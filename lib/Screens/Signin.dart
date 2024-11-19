@@ -7,6 +7,8 @@ class Signin extends StatelessWidget {
   final TextEditingController registerController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
 
+  Signin({super.key});
+
   void _signin(BuildContext context) {
     UserData user = UserData();
     if (user.registerNumber == registerController.text &&
@@ -17,7 +19,7 @@ class Signin extends StatelessWidget {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Invalid Register Number or DOB")),
+        const SnackBar(content: Text("Invalid Register Number or DOB")),
       );
     }
   }
@@ -39,7 +41,7 @@ class Signin extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Sign In',
                   style: TextStyle(
                     fontSize: 32,
@@ -47,7 +49,7 @@ class Signin extends StatelessWidget {
                     color: Colors.deepPurple,
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 TextField(
                   controller: registerController,
                   decoration: InputDecoration(
@@ -55,11 +57,11 @@ class Signin extends StatelessWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    prefixIcon: Icon(Icons.person),
+                    prefixIcon: const Icon(Icons.person),
                   ),
                   keyboardType: TextInputType.text,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextField(
                   controller: dobController,
                   decoration: InputDecoration(
@@ -67,25 +69,25 @@ class Signin extends StatelessWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    prefixIcon: Icon(Icons.calendar_today),
+                    prefixIcon: const Icon(Icons.calendar_today),
                   ),
                   keyboardType: TextInputType.datetime,
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () => _signin(context),
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Login',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -93,7 +95,7 @@ class Signin extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => Signup()),
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     "Don't have an account? Sign up",
                     style: TextStyle(color: Colors.deepPurple),
                   ),

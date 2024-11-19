@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeechAnswerPage extends StatefulWidget {
+  const SpeechAnswerPage({super.key});
+
   @override
   _SpeechAnswerPageState createState() => _SpeechAnswerPageState();
 }
@@ -48,13 +50,13 @@ class _SpeechAnswerPageState extends State<SpeechAnswerPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Speak to answer the question',
           style: TextStyle(color: Colors.black),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.videocam, color: Colors.black),
+            icon: const Icon(Icons.videocam, color: Colors.black),
             onPressed: () {
               // Add proctoring video action here if needed
             },
@@ -66,16 +68,16 @@ class _SpeechAnswerPageState extends State<SpeechAnswerPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Your Answer:',
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.black),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Container(
-              padding: EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(12.0),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(8.0),
@@ -84,11 +86,11 @@ class _SpeechAnswerPageState extends State<SpeechAnswerPage> {
               child: SingleChildScrollView(
                 child: Text(
                   _text,
-                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  style: const TextStyle(fontSize: 16, color: Colors.black),
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Center(
               child: ElevatedButton.icon(
                 onPressed: _isListening ? _stopListening : _startListening,
@@ -98,11 +100,11 @@ class _SpeechAnswerPageState extends State<SpeechAnswerPage> {
                 ),
                 label: Text(
                   _isListening ? 'Stop' : 'Start Speaking',
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.deepPurple,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
