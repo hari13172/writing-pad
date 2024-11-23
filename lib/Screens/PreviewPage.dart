@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:new_app/Screens/ExamPage.dart';
 import 'dart:convert';
-import 'ReviewPage.dart';
+
+import 'package:new_app/Screens/ReviewPage.dart';
 
 class PreviewPage extends StatefulWidget {
   final String recognizedParagraph;
   final List<String> submittedAnswers;
   final String docId;
+  final int currentIndex;
+  final int totalIndex;
 
   const PreviewPage({
     Key? key,
     required this.recognizedParagraph,
     required this.submittedAnswers,
     required this.docId,
+    required this.currentIndex,
+    required this.totalIndex,
   }) : super(key: key);
 
   @override
@@ -83,14 +89,18 @@ class _PreviewPageState extends State<PreviewPage> {
         final data = jsonDecode(response.body);
         if (data['status'] == 'success') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Answer saved successfully!")),
+            SnackBar(
+                content:
+                    Text("Answer saved successfully! ${widget.currentIndex}")),
           );
+
           _navigateToReviewPage();
         } else {
           throw Exception(data['message'] ?? 'Unknown error occurred');
         }
       } else {
-        throw Exception('Failed to save answer. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to save answer. Status code: ${response.statusCode}');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -100,26 +110,28 @@ class _PreviewPageState extends State<PreviewPage> {
   }
 
   void _navigateToReviewPage() {
-    // Check if the answer already exists in the submittedAnswers list
-    final int existingIndex = widget.submittedAnswers.indexOf(widget.recognizedParagraph);
+    // Navigate explicitly to ExamPage
 
-    if (existingIndex != -1) {
-      // Update the existing answer
-      widget.submittedAnswers[existingIndex] = _editableParagraph;
-    } else {
-      // Add the new answer
-      widget.submittedAnswers.add(_editableParagraph);
-    }
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ReviewPage(
-          submittedAnswers: widget.submittedAnswers,
-          docIds: [widget.docId], // Pass docIds to ReviewPage
+    if (widget.currentIndex == widget.totalIndex - 1) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const ReviewPage(),
         ),
-      ),
-    );
+        (route) =>
+            false, // This clears the navigation stack and ensures it goes directly to ExamPage
+      );
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => ExamPage(
+            currentIndex: widget.currentIndex + 1,
+            totalIndex: widget.totalIndex,
+          ),
+        ),
+        (route) =>
+            false, // This clears the navigation stack and ensures it goes directly to ExamPage
+      );
+    }
   }
 
   @override
@@ -136,7 +148,8 @@ class _PreviewPageState extends State<PreviewPage> {
             ? [
                 IconButton(
                   icon: const Icon(Icons.check),
-                  onPressed: _saveEditing, // Call _saveEditing on tick button press
+                  onPressed:
+                      _saveEditing, // Call _saveEditing on tick button press
                 ),
                 IconButton(
                   icon: const Icon(Icons.cancel),
@@ -182,42 +195,48 @@ class _PreviewPageState extends State<PreviewPage> {
                     onPressed: _startEditing,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: theme.primaryColor,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                     child: Text(
                       "Edit",
-                      style: theme.textTheme.labelLarge?.copyWith(color: Colors.white),
+                      style: theme.textTheme.labelLarge
+                          ?.copyWith(color: Colors.white),
                     ),
                   ),
                   ElevatedButton(
                     onPressed: _writeAgain,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                     child: Text(
                       "Write Again",
-                      style: theme.textTheme.labelLarge?.copyWith(color: Colors.white),
+                      style: theme.textTheme.labelLarge
+                          ?.copyWith(color: Colors.white),
                     ),
                   ),
                   ElevatedButton(
                     onPressed: saveAnswerToFirebase,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                     child: Text(
                       "Save",
-                      style: theme.textTheme.labelLarge?.copyWith(color: Colors.white),
+                      style: theme.textTheme.labelLarge
+                          ?.copyWith(color: Colors.white),
                     ),
                   ),
                 ],

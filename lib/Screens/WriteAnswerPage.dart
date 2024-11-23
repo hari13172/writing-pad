@@ -7,7 +7,16 @@ import 'PreviewPage.dart';
 import 'package:http/http.dart' as http;
 
 class WriteAnswerPage extends StatefulWidget {
-  const WriteAnswerPage({Key? key}) : super(key: key);
+  final String id;
+  final int currentIndex;
+  final int totalIndex;
+
+  const WriteAnswerPage(
+      {Key? key,
+      required this.id,
+      required this.currentIndex,
+      required this.totalIndex})
+      : super(key: key);
 
   @override
   _WriteAnswerPageState createState() => _WriteAnswerPageState();
@@ -23,7 +32,8 @@ class _WriteAnswerPageState extends State<WriteAnswerPage> {
   String _recognizedParagraph = ""; // Store the current paragraph
   bool _isLoading = false; // Loading state for the handwriting conversion
   Timer? _debounceTimer; // Timer for debounce
-  final List<String> submittedAnswers = []; // List to store all submitted answers
+  final List<String> submittedAnswers =
+      []; // List to store all submitted answers
 
   @override
   void initState() {
@@ -68,7 +78,8 @@ class _WriteAnswerPageState extends State<WriteAnswerPage> {
     }
 
     final base64Image = base64Encode(imageBytes);
-    final url = Uri.parse('http://192.168.1.39:8090/convert-to-text'); // Replace with your backend URL
+    final url = Uri.parse(
+        'http://10.5.0.10:8090/convert-to-text'); // Replace with your backend URL
 
     try {
       final response = await http.post(
@@ -105,22 +116,23 @@ class _WriteAnswerPageState extends State<WriteAnswerPage> {
   }
 
   void _navigateToPreviewPage() async {
-    final String docId = "K4vKXx6CLtYqR3Qn1SCo"; // Replace with the actual docId for the question
-
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PreviewPage(
           recognizedParagraph: _recognizedParagraph,
           submittedAnswers: submittedAnswers,
-          docId: docId, // Pass the docId
+          docId: widget.id, // Pass the docId
+          currentIndex: widget.currentIndex,
+          totalIndex: widget.totalIndex,
         ),
       ),
     );
 
     if (result == 'writeAgain') {
       setState(() {
-        _recognizedParagraph = ""; // Clear the current paragraph for a new answer
+        _recognizedParagraph =
+            ""; // Clear the current paragraph for a new answer
       });
     } else if (result is String) {
       setState(() {
@@ -210,17 +222,21 @@ class _WriteAnswerPageState extends State<WriteAnswerPage> {
                               ),
                       ),
                       ElevatedButton(
-                        onPressed: _recognizedParagraph.isEmpty ? null : _navigateToPreviewPage,
+                        onPressed: _recognizedParagraph.isEmpty
+                            ? null
+                            : _navigateToPreviewPage,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: theme.primaryColor,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
                         child: Text(
                           "Submit",
-                          style: theme.textTheme.labelLarge?.copyWith(color: Colors.white),
+                          style: theme.textTheme.labelLarge
+                              ?.copyWith(color: Colors.white),
                         ),
                       ),
                     ],
@@ -280,17 +296,21 @@ class _WriteAnswerPageState extends State<WriteAnswerPage> {
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: _recognizedParagraph.isEmpty ? null : _navigateToPreviewPage,
+                      onPressed: _recognizedParagraph.isEmpty
+                          ? null
+                          : _navigateToPreviewPage,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: theme.primaryColor,
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
                       child: Text(
                         "Submit",
-                        style: theme.textTheme.labelLarge?.copyWith(color: Colors.white),
+                        style: theme.textTheme.labelLarge
+                            ?.copyWith(color: Colors.white),
                       ),
                     ),
                   ],

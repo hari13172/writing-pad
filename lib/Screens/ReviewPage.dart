@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ReviewPage extends StatefulWidget {
-  const ReviewPage({Key? key, required List<String> docIds, required List<String> submittedAnswers}) : super(key: key);
+  const ReviewPage({Key? key}) : super(key: key);
 
   @override
   _ReviewPageState createState() => _ReviewPageState();
@@ -23,7 +23,8 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   Future<void> fetchExamQuestionsAndAnswers() async {
-    const String endpoint = "http://10.5.0.10:8000/auth/get-exam-questions-answer/";
+    const String endpoint =
+        "http://10.5.0.10:8000/auth/get-exam-questions-answer/";
     try {
       final response = await http.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
@@ -32,15 +33,19 @@ class _ReviewPageState extends State<ReviewPage> {
           final questionsData = data['data'] as List;
           setState(() {
             docIds = questionsData.map((q) => q['id'].toString()).toList();
-            questions = questionsData.map((q) => q['question'].toString()).toList();
-            submittedAnswers = questionsData.map((q) => q['answer'].toString()).toList();
+            questions =
+                questionsData.map((q) => q['question'].toString()).toList();
+            submittedAnswers =
+                questionsData.map((q) => q['answer'].toString()).toList();
             isLoading = false;
           });
         } else {
-          throw Exception(data['message'] ?? 'Unexpected response from the server.');
+          throw Exception(
+              data['message'] ?? 'Unexpected response from the server.');
         }
       } else {
-        throw Exception('Failed to fetch data. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to fetch data. Status code: ${response.statusCode}');
       }
     } catch (e) {
       setState(() {
@@ -52,7 +57,8 @@ class _ReviewPageState extends State<ReviewPage> {
     }
   }
 
-  void _navigateToPreview(BuildContext context, String answer, String question, String docId) {
+  void _navigateToPreview(
+      BuildContext context, String answer, String question, String docId) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -60,6 +66,8 @@ class _ReviewPageState extends State<ReviewPage> {
           recognizedParagraph: answer.isEmpty ? question : answer,
           submittedAnswers: submittedAnswers,
           docId: docId,
+          currentIndex: docId.indexOf(docId),
+          totalIndex: docId.length,
         ),
       ),
     );

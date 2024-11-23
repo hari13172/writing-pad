@@ -124,8 +124,10 @@ class Signup extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              ExamPage()), // Navigate to ExamPage
+                          builder: (context) => ExamPage(
+                                currentIndex: 0,
+                                totalIndex: 0,
+                              )), // Navigate to ExamPage
                     );
                   },
                   style: ElevatedButton.styleFrom(

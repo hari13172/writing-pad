@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'Screens/Signin.dart';
 import 'Screens/Signup.dart';
 import 'Screens/ExamPage.dart';
-import 'Screens/WriteAnswerPage.dart';
 import 'Screens/SpeechAnswerPage.dart';
 
 void main() {
@@ -20,7 +19,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         // **Accessibility-Oriented Global Styles**
         primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: const Color(0xFFF5F5F5), // Soft background color
+        scaffoldBackgroundColor:
+            const Color(0xFFF5F5F5), // Soft background color
         textTheme: const TextTheme(
           displayLarge: TextStyle(
             fontFamily: 'Lexend Deca', // Font designed for readability
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        buttonTheme: ButtonThemeData(
+        buttonTheme: const ButtonThemeData(
           buttonColor: Colors.blue, // High contrast button color
           textTheme: ButtonTextTheme.primary,
         ),
@@ -59,8 +59,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => Signin(),
         '/signup': (context) => Signup(),
-        '/exam': (context) => const ExamPage(),
-        '/writeanswer': (context) => const WriteAnswerPage(),
+        '/exam': (context) => ExamPage(
+              currentIndex: 0,
+              totalIndex: 0,
+            ),
         '/speechanswer': (context) => const SpeechAnswerPage(),
       },
     );

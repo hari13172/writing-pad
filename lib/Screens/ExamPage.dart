@@ -6,16 +6,19 @@ import 'dart:async';
 import 'package:new_app/Screens/WriteAnswerPage.dart';
 import 'package:new_app/Screens/speech_to_text.dart';
 
+// ignore: must_be_immutable
 class ExamPage extends StatefulWidget {
-  const ExamPage({super.key});
+  int currentIndex;
+  int totalIndex;
+  ExamPage({Key? key, this.currentIndex = 0, this.totalIndex = 0})
+      : super(key: key);
 
   @override
   _ExamPageState createState() => _ExamPageState();
 }
 
 class _ExamPageState extends State<ExamPage> {
-  List<String> questions = [];
-  int currentQuestionIndex = 0;
+  List<Map<String, dynamic>> questions = [];
   int _secondsElapsed = 0;
   Timer? _timer;
   bool isLoading = true;
@@ -49,8 +52,7 @@ class _ExamPageState extends State<ExamPage> {
 
         if (data['status'] == 'success') {
           setState(() {
-            questions = List<String>.from(
-                data['data'].map((q) => q['question'] as String));
+            questions = List<Map<String, dynamic>>.from(data['data']);
             isLoading = false;
           });
         } else {
@@ -93,9 +95,9 @@ class _ExamPageState extends State<ExamPage> {
   }
 
   void _nextQuestion() {
-    if (currentQuestionIndex < questions.length - 1) {
+    if (widget.currentIndex < questions.length - 1) {
       setState(() {
-        currentQuestionIndex++;
+        widget.currentIndex++;
       });
     } else {
       showDialog(
@@ -120,7 +122,7 @@ class _ExamPageState extends State<ExamPage> {
   double _getProgressValue() {
     return questions.isEmpty
         ? 0.0
-        : (currentQuestionIndex + 1) / questions.length;
+        : (widget.currentIndex + 1) / questions.length;
   }
 
   @override
@@ -195,12 +197,12 @@ class _ExamPageState extends State<ExamPage> {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'Question ${currentQuestionIndex + 1}/${questions.length}:',
+                        'Question ${widget.currentIndex + 1}/${questions.length}:',
                         style: theme.textTheme.displayLarge,
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        questions[currentQuestionIndex],
+                        questions[widget.currentIndex]["question"],
                         style: theme.textTheme.bodyLarge,
                       ),
                       const SizedBox(height: 32),
@@ -213,7 +215,11 @@ class _ExamPageState extends State<ExamPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const WriteAnswerPage(),
+                                  builder: (context) => WriteAnswerPage(
+                                    id: questions[widget.currentIndex]["id"],
+                                    currentIndex: widget.currentIndex,
+                                    totalIndex: questions.length,
+                                  ),
                                 ),
                               );
                             },
@@ -262,9 +268,9 @@ class _ExamPageState extends State<ExamPage> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              if (currentQuestionIndex > 0) {
+                              if (widget.currentIndex > 0) {
                                 setState(() {
-                                  currentQuestionIndex--;
+                                  widget.currentIndex--;
                                 });
                               } else {
                                 showDialog(
