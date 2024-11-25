@@ -4,6 +4,53 @@ import 'Screens/Signup.dart';
 import 'Screens/ExamPage.dart';
 import 'Screens/SpeechAnswerPage.dart';
 
+// ProctoringObserver implementation
+class ProctoringObserver extends StatefulWidget {
+  final Widget child;
+
+  const ProctoringObserver({Key? key, required this.child}) : super(key: key);
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _ProctoringObserverState createState() => _ProctoringObserverState();
+}
+
+class _ProctoringObserverState extends State<ProctoringObserver>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      // Navigate to login page if the app is paused or inactive
+      Future.delayed(Duration.zero, () {
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/', // Replace '/' with the route of your Signin page if different
+          (Route<dynamic> route) => false,
+        );
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
+  }
+}
+
 void main() {
   runApp(const MyApp());
 }
@@ -57,13 +104,19 @@ class MyApp extends StatelessWidget {
       // **Navigation Routes**
       initialRoute: '/',
       routes: {
-        '/': (context) => Signin(),
-        '/signup': (context) => Signup(),
-        '/exam': (context) => ExamPage(
-              currentIndex: 0,
-              totalIndex: 0,
+        '/': (context) => ProctoringObserver(
+              child: Signin(),
             ),
-        '/speechanswer': (context) => const SpeechAnswerPage(),
+        '/signup': (context) => Signup(),
+        '/exam': (context) => ProctoringObserver(
+              child: ExamPage(
+                currentIndex: 0,
+                totalIndex: 0,
+              ),
+            ),
+        '/speechanswer': (context) => const ProctoringObserver(
+              child: SpeechAnswerPage(),
+            ),
       },
     );
   }

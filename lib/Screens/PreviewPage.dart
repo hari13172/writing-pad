@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:new_app/Screens/ExamPage.dart';
 import 'dart:convert';
 
-import 'package:new_app/Screens/ReviewPage.dart';
+import 'ExamPage.dart';
+import 'ReviewPage.dart';
 
 class PreviewPage extends StatefulWidget {
   final String recognizedParagraph;
@@ -66,7 +66,9 @@ class _PreviewPageState extends State<PreviewPage> {
   }
 
   void _writeAgain() {
-    Navigator.pop(context, 'writeAgain');
+    if (mounted) {
+      Navigator.pop(context, 'writeAgain');
+    }
   }
 
   Future<void> saveAnswerToFirebase() async {
@@ -88,13 +90,12 @@ class _PreviewPageState extends State<PreviewPage> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['status'] == 'success') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text("Answer saved successfully! ${widget.currentIndex}")),
-          );
-
-          _navigateToReviewPage();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Answer saved successfully!")),
+            );
+            _navigateToReviewPage();
+          }
         } else {
           throw Exception(data['message'] ?? 'Unknown error occurred');
         }
@@ -103,22 +104,23 @@ class _PreviewPageState extends State<PreviewPage> {
             'Failed to save answer. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: $e")),
+        );
+      }
     }
   }
 
   void _navigateToReviewPage() {
-    // Navigate explicitly to ExamPage
+    if (!mounted) return;
 
     if (widget.currentIndex == widget.totalIndex - 1) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => const ReviewPage(),
         ),
-        (route) =>
-            false, // This clears the navigation stack and ensures it goes directly to ExamPage
+        (route) => false, // Clears navigation stack
       );
     } else {
       Navigator.of(context).pushAndRemoveUntil(
@@ -128,8 +130,7 @@ class _PreviewPageState extends State<PreviewPage> {
             totalIndex: widget.totalIndex,
           ),
         ),
-        (route) =>
-            false, // This clears the navigation stack and ensures it goes directly to ExamPage
+        (route) => false, // Clears navigation stack
       );
     }
   }
@@ -142,14 +143,13 @@ class _PreviewPageState extends State<PreviewPage> {
       appBar: AppBar(
         title: Text(
           "Preview",
-          style: theme.textTheme.displayLarge,
+          style: theme.textTheme.titleLarge?.copyWith(color: Colors.white),
         ),
         actions: _isEditing
             ? [
                 IconButton(
                   icon: const Icon(Icons.check),
-                  onPressed:
-                      _saveEditing, // Call _saveEditing on tick button press
+                  onPressed: _saveEditing,
                 ),
                 IconButton(
                   icon: const Icon(Icons.cancel),

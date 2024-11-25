@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/UserData.dart';
-import 'Signin.dart'; // Import Signin page
-import 'ExamPage.dart'; // Import ExamPage
+import 'package:http/http.dart' as http;
+import 'dart:convert'; // For JSON encoding
+import 'Signin.dart';
+import 'ExamPage.dart';
 
 class Signup extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
@@ -11,22 +12,57 @@ class Signup extends StatelessWidget {
   final TextEditingController examModeController = TextEditingController();
   final TextEditingController registerNumberController =
       TextEditingController();
+  final TextEditingController contactNumberController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
   Signup({super.key});
 
-  void _saveUserData() {
-    UserData user = UserData();
-    user.name = nameController.text;
-    user.collegeName = collegeController.text;
-    user.dob = dobController.text;
-    user.disabilityType = disabilityController.text;
-    user.examMode = examModeController.text;
-    user.registerNumber = registerNumberController.text;
+  Future<void> _submitForm(BuildContext context) async {
+    final url = Uri.parse('http://10.5.0.10:8000/submit-student-form/');
+    final body = {
+      'name': nameController.text,
+      'college_name': collegeController.text,
+      'dob': dobController.text,
+      'disability_type': disabilityController.text,
+      'exam_mode': examModeController.text,
+      'register_number': registerNumberController.text,
+      'contact_number': contactNumberController.text,
+      'email': emailController.text,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Student registered successfully!')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Signin()), // Navigate to Signin page
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text('Error: ${response.statusCode} - ${response.body}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // Access the current theme
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -55,7 +91,7 @@ class Signup extends StatelessWidget {
               Text(
                 'Student Detail Form',
                 style: theme.textTheme.displayLarge?.copyWith(
-                  color: Colors.deepPurple, // Adjust color if needed
+                  color: Colors.deepPurple,
                 ),
               ),
               const SizedBox(height: 20),
@@ -95,18 +131,24 @@ class Signup extends StatelessWidget {
                 controller: registerNumberController,
                 label: 'Register Number',
               ),
+              const SizedBox(height: 20),
+              _buildTextField(
+                context,
+                controller: contactNumberController,
+                label: 'Contact Number',
+                keyboardType: TextInputType.phone,
+              ),
+              const SizedBox(height: 20),
+              _buildTextField(
+                context,
+                controller: emailController,
+                label: 'Email',
+                keyboardType: TextInputType.emailAddress,
+              ),
               const SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    _saveUserData(); // Save user data without password
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              Signin()), // Navigate to Signin page
-                    );
-                  },
+                  onPressed: () => _submitForm(context), // Submit the form
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 40, vertical: 15),
@@ -124,10 +166,11 @@ class Signup extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ExamPage(
-                                currentIndex: 0,
-                                totalIndex: 0,
-                              )), // Navigate to ExamPage
+                        builder: (context) => ExamPage(
+                          currentIndex: 0,
+                          totalIndex: 0,
+                        ),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -148,7 +191,6 @@ class Signup extends StatelessWidget {
     );
   }
 
-  // Helper function to build a styled TextField
   Widget _buildTextField(
     BuildContext context, {
     required TextEditingController controller,
@@ -160,7 +202,7 @@ class Signup extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: theme.textTheme.labelLarge, // Use global label style
+        labelStyle: theme.textTheme.labelLarge,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),

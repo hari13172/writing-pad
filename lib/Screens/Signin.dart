@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:new_app/Screens/Signup.dart';
-import '../models/UserData.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert'; // For JSON decoding
+import 'Signup.dart';
 import 'ExamPage.dart';
 
 class Signin extends StatelessWidget {
@@ -9,17 +10,44 @@ class Signin extends StatelessWidget {
 
   Signin({super.key});
 
-  void _signin(BuildContext context) {
-    UserData user = UserData();
-    if (user.registerNumber == registerController.text &&
-        user.dob == dobController.text) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ExamPage()),
+  Future<void> _signin(BuildContext context) async {
+    final url = Uri.parse('http://10.5.0.10:8000/validate-student/');
+    final body = {
+      'dob': dobController.text,
+      'register_number': registerController.text,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(body),
       );
-    } else {
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        // Check the 'message' field for success
+        if (responseData['message'] == 'Student matched successfully') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => ExamPage()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Invalid Register Number or DOB")),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${response.statusCode} - ${response.body}'),
+          ),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Invalid Register Number or DOB")),
+        SnackBar(content: Text('An error occurred: $e')),
       );
     }
   }
@@ -65,7 +93,7 @@ class Signin extends StatelessWidget {
                 TextField(
                   controller: dobController,
                   decoration: InputDecoration(
-                    labelText: 'DOB (DD/MM/YYYY)',
+                    labelText: 'DOB (YYYY-MM-DD)',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -77,7 +105,8 @@ class Signin extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () => _signin(context),
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -108,3 +137,5 @@ class Signin extends StatelessWidget {
     );
   }
 }
+
+
