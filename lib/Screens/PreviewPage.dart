@@ -8,7 +8,7 @@ import 'ReviewPage.dart';
 class PreviewPage extends StatefulWidget {
   final String recognizedParagraph;
   final List<String> submittedAnswers;
-  final String docId;
+  final String docId; // Use docid instead of question_id
   final int currentIndex;
   final int totalIndex;
 
@@ -55,7 +55,7 @@ class _PreviewPageState extends State<PreviewPage> {
       _isEditing = false;
     });
 
-    saveAnswerToFirebase();
+    saveAnswerToServer();
   }
 
   void _cancelEditing() {
@@ -71,10 +71,14 @@ class _PreviewPageState extends State<PreviewPage> {
     }
   }
 
-  Future<void> saveAnswerToFirebase() async {
-    const String endpoint = "http://10.5.0.10:8000/auth/write-answer/";
+  Future<void> saveAnswerToServer() async {
+    const String baseUrl = "http://10.5.0.10:8000/save-answer";
+    const String studentId = "12345";
+    const String sessionId = "95879983-4e74-4cd0-b980-f66c08c30b52";
+
+    final String endpoint = "$baseUrl/$studentId/$sessionId/";
     final Map<String, dynamic> body = {
-      "doc_id": widget.docId,
+      "docid": widget.docId, // Send docid instead of question_id
       "answer": _editableParagraph,
     };
 
@@ -94,7 +98,7 @@ class _PreviewPageState extends State<PreviewPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Answer saved successfully!")),
             );
-            _navigateToReviewPage();
+            _navigateToNextPage();
           }
         } else {
           throw Exception(data['message'] ?? 'Unknown error occurred');
@@ -112,7 +116,7 @@ class _PreviewPageState extends State<PreviewPage> {
     }
   }
 
-  void _navigateToReviewPage() {
+  void _navigateToNextPage() {
     if (!mounted) return;
 
     if (widget.currentIndex == widget.totalIndex - 1) {
@@ -224,7 +228,7 @@ class _PreviewPageState extends State<PreviewPage> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: saveAnswerToFirebase,
+                    onPressed: saveAnswerToServer,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       padding: const EdgeInsets.symmetric(

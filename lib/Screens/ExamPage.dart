@@ -3,13 +3,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 
-import 'package:new_app/Screens/WriteAnswerPage.dart';
-import 'package:new_app/Screens/speech_to_text.dart';
+import 'WriteAnswerPage.dart';
+import 'speech_to_text.dart';
 
 // ignore: must_be_immutable
 class ExamPage extends StatefulWidget {
   int currentIndex;
   int totalIndex;
+
   ExamPage({Key? key, this.currentIndex = 0, this.totalIndex = 0})
       : super(key: key);
 
@@ -39,7 +40,11 @@ class _ExamPageState extends State<ExamPage> {
   }
 
   Future<void> fetchQuestions() async {
-    const String endpoint = "http://10.5.0.10:8000/auth/get-exam-questions/";
+    const String baseUrl = "http://10.5.0.10:8000/get-exam-questions";
+    const String studentId = "12345";
+    const String sessionId = "95879983-4e74-4cd0-b980-f66c08c30b52";
+
+    final String endpoint = "$baseUrl/$studentId/$sessionId/";
 
     try {
       final response = await http.get(Uri.parse(endpoint));
@@ -50,15 +55,19 @@ class _ExamPageState extends State<ExamPage> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
 
-        if (data['status'] == 'success') {
+        if (data['status'] == 'success' && data['questions'] != null) {
           setState(() {
-            questions = List<Map<String, dynamic>>.from(data['data']);
+            questions =
+                List<Map<String, dynamic>>.from(data['questions'].map((q) => {
+                      'id': q['id'] ?? 'Unknown ID',
+                      'question': q['text'] ?? 'No question text available',
+                    }));
             isLoading = false;
           });
         } else {
           setState(() {
             hasError = true;
-            errorMessage = 'Unexpected response format.';
+            errorMessage = data['message'] ?? 'Unexpected response format.';
             isLoading = false;
           });
         }
@@ -202,11 +211,13 @@ class _ExamPageState extends State<ExamPage> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        questions[widget.currentIndex]["question"],
+                        questions.isNotEmpty
+                            ? (questions[widget.currentIndex]["question"] ??
+                                "No question available")
+                            : "No question available",
                         style: theme.textTheme.bodyLarge,
                       ),
                       const SizedBox(height: 32),
-                      // Combined Speak and Write Buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [

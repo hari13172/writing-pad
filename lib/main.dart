@@ -11,7 +11,6 @@ class ProctoringObserver extends StatefulWidget {
   const ProctoringObserver({Key? key, required this.child}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _ProctoringObserverState createState() => _ProctoringObserverState();
 }
 
@@ -36,7 +35,6 @@ class _ProctoringObserverState extends State<ProctoringObserver>
         state == AppLifecycleState.inactive) {
       // Navigate to login page if the app is paused or inactive
       Future.delayed(Duration.zero, () {
-        // ignore: use_build_context_synchronously
         Navigator.of(context).pushNamedAndRemoveUntil(
           '/', // Replace '/' with the route of your Signin page if different
           (Route<dynamic> route) => false,

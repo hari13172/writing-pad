@@ -24,31 +24,47 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   Future<void> fetchExamQuestionsAndAnswers() async {
+    // Updated endpoint to use the correct API
     const String endpoint =
-        "http://10.5.0.10:8000/auth/get-exam-questions-answer/";
+        "http://10.5.0.10:8000/fetch-all-questions-and-answers/12345/95879983-4e74-4cd0-b980-f66c08c30b52/";
+
     try {
+      print("Sending GET request to: $endpoint");
       final response = await http.get(Uri.parse(endpoint));
+
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+
         if (data['status'] == 'success') {
-          final questionsData = data['data'] as List;
+          // Safely handle 'data' key
+          final questionsData = data['data'] as List? ?? [];
+          print("Fetched questions: $questionsData");
+
           setState(() {
-            docIds = questionsData.map((q) => q['id'].toString()).toList();
+            docIds =
+                questionsData.map((q) => q['id']?.toString() ?? "").toList();
             questions =
-                questionsData.map((q) => q['question'].toString()).toList();
-            submittedAnswers =
-                questionsData.map((q) => q['answer'].toString()).toList();
+                questionsData.map((q) => q['text']?.toString() ?? "").toList();
+            submittedAnswers = questionsData
+                .map((q) => q['answer']?.toString() ?? "")
+                .toList();
             isLoading = false;
           });
         } else {
-          throw Exception(
-              data['message'] ?? 'Unexpected response from the server.');
+          final errorMessage = data['message'] ?? 'Unexpected server response.';
+          print("Error: $errorMessage");
+          throw Exception(errorMessage);
         }
       } else {
+        print("Error: Server returned status code ${response.statusCode}");
         throw Exception(
             'Failed to fetch data. Status code: ${response.statusCode}');
       }
     } catch (e) {
+      print("Error occurred: $e");
       setState(() {
         isLoading = false;
       });
@@ -83,7 +99,7 @@ class _ReviewPageState extends State<ReviewPage> {
       appBar: AppBar(
         title: Text(
           "Review Answers",
-          style: theme.textTheme.titleLarge?.copyWith(color: Colors.white),
+          style: theme.textTheme.titleLarge?.copyWith(color: Colors.black12),
         ),
       ),
       body: Column(
