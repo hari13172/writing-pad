@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'globalState/stateValues.dart';
 import 'Screens/Signin.dart';
 import 'Screens/Signup.dart';
 import 'Screens/ExamPage.dart';
@@ -50,7 +52,10 @@ class _ProctoringObserverState extends State<ProctoringObserver>
 }
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (_) => ExamState(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

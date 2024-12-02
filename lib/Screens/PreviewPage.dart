@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'ExamPage.dart';
 import 'ReviewPage.dart';
+import 'package:provider/provider.dart';
+import '../globalState/stateValues.dart';
 
 class PreviewPage extends StatefulWidget {
   final String recognizedParagraph;
@@ -29,10 +30,14 @@ class _PreviewPageState extends State<PreviewPage> {
   late String _editableParagraph;
   bool _isEditing = false;
   TextEditingController? _textController;
+  late ExamState examState;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      examState = Provider.of<ExamState>(context, listen: false);
+    });
     _editableParagraph = widget.recognizedParagraph;
     _textController = TextEditingController(text: _editableParagraph);
   }
@@ -73,12 +78,13 @@ class _PreviewPageState extends State<PreviewPage> {
 
   Future<void> saveAnswerToServer() async {
     const String baseUrl = "http://10.5.0.10:8000/save-answer";
-    const String studentId = "12345";
-    const String sessionId = "95879983-4e74-4cd0-b980-f66c08c30b52";
+    String studentId = examState.regNo;
+    String sessionId = examState.examId;
 
     final String endpoint = "$baseUrl/$studentId/$sessionId/";
+
     final Map<String, dynamic> body = {
-      "docid": widget.docId, // Send docid instead of question_id
+      "question_id": widget.docId, // Send docid instead of question_id
       "answer": _editableParagraph,
     };
 

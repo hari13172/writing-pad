@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
-
 import 'WriteAnswerPage.dart';
 import 'speech_to_text.dart';
+import 'package:provider/provider.dart';
+import '../globalState/stateValues.dart';
 
 // ignore: must_be_immutable
 class ExamPage extends StatefulWidget {
@@ -25,11 +26,19 @@ class _ExamPageState extends State<ExamPage> {
   bool isLoading = true;
   bool hasError = false;
   String errorMessage = '';
+  late ExamState examState;
 
   @override
   void initState() {
     super.initState();
-    fetchQuestions();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Access the ExamState using Provider
+      examState = Provider.of<ExamState>(context, listen: false);
+      // Now you can use examState to fetch questions
+      fetchQuestions();
+    });
+
     startTimer();
   }
 
@@ -41,8 +50,8 @@ class _ExamPageState extends State<ExamPage> {
 
   Future<void> fetchQuestions() async {
     const String baseUrl = "http://10.5.0.10:8000/get-exam-questions";
-    const String studentId = "12345";
-    const String sessionId = "95879983-4e74-4cd0-b980-f66c08c30b52";
+    String studentId = examState.regNo;
+    String sessionId = examState.examId;
 
     final String endpoint = "$baseUrl/$studentId/$sessionId/";
 
@@ -108,24 +117,7 @@ class _ExamPageState extends State<ExamPage> {
       setState(() {
         widget.currentIndex++;
       });
-    } else {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text("Exam Complete"),
-          content: const Text("You have completed all questions."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
-    }
+    } else {}
   }
 
   double _getProgressValue() {

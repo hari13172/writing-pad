@@ -3,6 +3,8 @@ import 'package:new_app/Screens/DonePage.dart';
 import 'PreviewPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:provider/provider.dart';
+import '../globalState/stateValues.dart';
 
 class ReviewPage extends StatefulWidget {
   const ReviewPage({Key? key}) : super(key: key);
@@ -16,17 +18,25 @@ class _ReviewPageState extends State<ReviewPage> {
   List<String> submittedAnswers = [];
   List<String> docIds = [];
   bool isLoading = true;
+  late ExamState examState;
 
   @override
   void initState() {
     super.initState();
-    fetchExamQuestionsAndAnswers();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      examState = Provider.of<ExamState>(context, listen: false);
+      fetchExamQuestionsAndAnswers();
+    });
   }
 
   Future<void> fetchExamQuestionsAndAnswers() async {
     // Updated endpoint to use the correct API
-    const String endpoint =
-        "http://10.5.0.10:8000/fetch-all-questions-and-answers/12345/95879983-4e74-4cd0-b980-f66c08c30b52/";
+    const String baseUrl =
+        "http://10.5.0.10:8000/fetch-all-questions-and-answers";
+    String studentId = examState.regNo;
+    String sessionId = examState.examId;
+
+    final String endpoint = "$baseUrl/$studentId/$sessionId/";
 
     try {
       print("Sending GET request to: $endpoint");

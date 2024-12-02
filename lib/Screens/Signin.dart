@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert'; // For JSON decoding
 import 'Signup.dart';
 import 'ExamPage.dart';
+import "../globalState/stateValues.dart";
+import 'package:provider/provider.dart'; // Import provider
 
 class Signin extends StatelessWidget {
   final TextEditingController registerController = TextEditingController();
@@ -29,6 +31,14 @@ class Signin extends StatelessWidget {
 
         // Check the 'message' field for success
         if (responseData['message'] == 'Student matched successfully') {
+          // Access the global ExamState
+          // ignore: use_build_context_synchronously
+          final examState = Provider.of<ExamState>(context, listen: false);
+
+          // Update the global state
+          examState.updateRegNo(registerController.text);
+          examState.updateExamId(responseData["examId"]);
+
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => ExamPage()),
