@@ -111,11 +111,9 @@ class MyApp extends StatelessWidget {
               child: Signin(),
             ),
         '/signup': (context) => Signup(),
-        '/exam': (context) => ProctoringObserver(
-              child: ExamPage(
-                currentIndex: 0,
-                totalIndex: 0,
-              ),
+        '/exam': (context) => ExamPage(
+              currentIndex: 0,
+              totalIndex: 0,
             ),
         '/speechanswer': (context) => const ProctoringObserver(
               child: SpeechAnswerPage(),
