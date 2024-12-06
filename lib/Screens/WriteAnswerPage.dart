@@ -19,6 +19,7 @@ class WriteAnswerPage extends StatefulWidget {
       : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _WriteAnswerPageState createState() => _WriteAnswerPageState();
 }
 
@@ -88,8 +89,21 @@ class _WriteAnswerPageState extends State<WriteAnswerPage> {
         body: jsonEncode({"image_base64": base64Image}),
       );
 
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
+
       if (response.statusCode == 200) {
-        final recognizedText = jsonDecode(response.body)['text'];
+        final utf8DecodedResponse =
+            utf8.decode(response.bodyBytes); // Decode as UTF-8
+        final decodedResponse =
+            jsonDecode(utf8DecodedResponse); // Parse the JSON
+
+        // Get the 'text' field which is a list, then join it into a single string
+        final recognizedText = decodedResponse['text'] is List
+            ? (decodedResponse['text'] as List)
+                .join(" ") // Join list into a string
+            : decodedResponse['text'] ?? "No text found"; // Fallback text
+
         setState(() {
           if (_recognizedParagraph.isNotEmpty) {
             _recognizedParagraph += " "; // Add a space between sentences
