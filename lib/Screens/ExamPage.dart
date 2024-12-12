@@ -6,6 +6,8 @@ import 'WriteAnswerPage.dart';
 import 'speech_to_text.dart';
 import 'package:provider/provider.dart';
 import '../globalState/stateValues.dart';
+import 'MathCanvasPage.dart';
+import 'package:flutter_tts/flutter_tts.dart'; // Import TTS package
 
 // ignore: must_be_immutable
 class ExamPage extends StatefulWidget {
@@ -27,6 +29,7 @@ class _ExamPageState extends State<ExamPage> {
   bool hasError = false;
   String errorMessage = '';
   late ExamState examState;
+  final FlutterTts flutterTts = FlutterTts(); // Initialize TTS instance
 
   @override
   void initState() {
@@ -40,12 +43,21 @@ class _ExamPageState extends State<ExamPage> {
     });
 
     startTimer();
+    initializeTts();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    flutterTts.stop(); // Stop TTS when the widget is disposed
     super.dispose();
+  }
+
+  void initializeTts() {
+    flutterTts.setLanguage("en-US");
+    flutterTts.setSpeechRate(0.4); // Adjust speech rate
+    flutterTts.setVolume(1.0);
+    flutterTts.setPitch(1.0);
   }
 
   Future<void> fetchQuestions() async {
@@ -197,9 +209,25 @@ class _ExamPageState extends State<ExamPage> {
                         style: theme.textTheme.bodyLarge,
                       ),
                       const SizedBox(height: 20),
-                      Text(
-                        'Question ${widget.currentIndex + 1}/${questions.length}:',
-                        style: theme.textTheme.displayLarge,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Question ${widget.currentIndex + 1}/${questions.length}:',
+                              style: theme.textTheme.displayLarge,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.play_circle_fill,
+                                color: Colors.green, size: 30),
+                            onPressed: () {
+                              final questionText =
+                                  questions[widget.currentIndex]["question"] ??
+                                      "No question available";
+                              flutterTts.speak(questionText);
+                            },
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -245,7 +273,10 @@ class _ExamPageState extends State<ExamPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SpeechText(),
+                                  // ignore: avoid_types_as_parameter_names
+                                  builder: (context) => SpeechText(
+                                    onSaveText: (String) {},
+                                  ),
                                 ),
                               );
                             },
@@ -264,6 +295,33 @@ class _ExamPageState extends State<ExamPage> {
                             ),
                           ),
                         ],
+                      ),
+                      const SizedBox(height: 16),
+                      Center(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MathCanvasPage(),
+                              ),
+                            );
+                          },
+                          icon:
+                              const Icon(Icons.calculate, color: Colors.white),
+                          label: const Text(
+                            'MATHS',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
                       ),
                       const Spacer(),
                       Row(

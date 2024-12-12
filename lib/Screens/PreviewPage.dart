@@ -153,7 +153,7 @@ class _PreviewPageState extends State<PreviewPage> {
       appBar: AppBar(
         title: Text(
           "Preview",
-          style: theme.textTheme.titleLarge?.copyWith(color: Colors.black12),
+          style: theme.textTheme.titleLarge?.copyWith(color: Colors.black),
         ),
         actions: _isEditing
             ? [

@@ -4,7 +4,6 @@ import 'globalState/stateValues.dart';
 import 'Screens/Signin.dart';
 import 'Screens/Signup.dart';
 import 'Screens/ExamPage.dart';
-import 'Screens/SpeechAnswerPage.dart';
 
 // ProctoringObserver implementation
 class ProctoringObserver extends StatefulWidget {
@@ -13,6 +12,7 @@ class ProctoringObserver extends StatefulWidget {
   const ProctoringObserver({Key? key, required this.child}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _ProctoringObserverState createState() => _ProctoringObserverState();
 }
 
@@ -114,9 +114,6 @@ class MyApp extends StatelessWidget {
         '/exam': (context) => ExamPage(
               currentIndex: 0,
               totalIndex: 0,
-            ),
-        '/speechanswer': (context) => const ProctoringObserver(
-              child: SpeechAnswerPage(),
             ),
       },
     );

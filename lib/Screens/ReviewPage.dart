@@ -109,7 +109,7 @@ class _ReviewPageState extends State<ReviewPage> {
       appBar: AppBar(
         title: Text(
           "Review Answers",
-          style: theme.textTheme.titleLarge?.copyWith(color: Colors.black12),
+          style: theme.textTheme.titleLarge?.copyWith(color: Colors.black),
         ),
       ),
       body: Column(

@@ -1,84 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // For JSON decoding
-import 'dart:io'; // For platform checks
-import 'package:flutter_dnd/flutter_dnd.dart'; // DND package
 import 'Signup.dart';
 import 'ExamPage.dart';
-import '../globalState/stateValues.dart';
+import "../globalState/stateValues.dart";
 import 'package:provider/provider.dart'; // Import provider
 
-class Signin extends StatefulWidget {
-  const Signin({super.key});
-
-  @override
-  _SigninState createState() => _SigninState();
-}
-
-class _SigninState extends State<Signin> {
+class Signin extends StatelessWidget {
   final TextEditingController registerController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
-  bool _dndEnabled = false; // Track if DND is enabled
 
-  @override
-  void initState() {
-    super.initState();
-    _checkAndEnableDND();
-  }
-
-  @override
-  void dispose() {
-    _disableDND(); // Restore notifications on exit
-    super.dispose();
-  }
-
-  Future<void> _checkAndEnableDND() async {
-    if (!Platform.isAndroid) {
-      debugPrint("DND mode is only supported on Android.");
-      return;
-    }
-
-    try {
-      final isGranted = await FlutterDnd.isNotificationPolicyAccessGranted;
-
-      if (isGranted == null || !isGranted) {
-        FlutterDnd.gotoPolicySettings(); // Redirect to system settings
-        return;
-      }
-
-      await _enableDND();
-    } catch (e) {
-      debugPrint("Error checking/enabling DND: $e");
-    }
-  }
-
-  Future<void> _enableDND() async {
-    try {
-      await FlutterDnd.setInterruptionFilter(
-          FlutterDnd.INTERRUPTION_FILTER_NONE);
-      setState(() {
-        _dndEnabled = true;
-      });
-      debugPrint("DND enabled successfully.");
-    } catch (e) {
-      debugPrint("Error enabling DND: $e");
-    }
-  }
-
-  Future<void> _disableDND() async {
-    if (!_dndEnabled) return;
-
-    try {
-      await FlutterDnd.setInterruptionFilter(
-          FlutterDnd.INTERRUPTION_FILTER_ALL);
-      setState(() {
-        _dndEnabled = false;
-      });
-      debugPrint("DND disabled successfully.");
-    } catch (e) {
-      debugPrint("Error disabling DND: $e");
-    }
-  }
+  Signin({super.key});
 
   Future<void> _signin(BuildContext context) async {
     final url = Uri.parse('http://10.5.0.10:8000/validate-student/');
@@ -97,9 +29,13 @@ class _SigninState extends State<Signin> {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
 
+        // Check the 'message' field for success
         if (responseData['message'] == 'Student matched successfully') {
-          // Update the global ExamState
+          // Access the global ExamState
+          // ignore: use_build_context_synchronously
           final examState = Provider.of<ExamState>(context, listen: false);
+
+          // Update the global state
           examState.updateRegNo(registerController.text);
           examState.updateExamId(responseData["examId"]);
 
@@ -115,8 +51,8 @@ class _SigninState extends State<Signin> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content:
-                  Text('Error: ${response.statusCode} - ${response.body}')),
+            content: Text('Error: ${response.statusCode} - ${response.body}'),
+          ),
         );
       }
     } catch (e) {
