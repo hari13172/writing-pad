@@ -63,9 +63,9 @@ class _SavedAnswerPageState extends State<SavedAnswerPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Answer saved at:",
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -73,9 +73,9 @@ class _SavedAnswerPageState extends State<SavedAnswerPage> {
                     style: const TextStyle(fontSize: 16, color: Colors.blue),
                   ),
                   const SizedBox(height: 16),
-                  Text(
+                  const Text(
                     "Answer Content:",
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Expanded(

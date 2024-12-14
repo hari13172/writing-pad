@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class MathSavePage extends StatelessWidget {
   final Uint8List imageData;
 
-  MathSavePage(
-      {required this.imageData, required List points, required String output});
+  const MathSavePage(
+      {super.key, required this.imageData, required List points, required String output});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,6 @@ class MathSavePage extends StatelessWidget {
                   const SnackBar(content: Text('Canvas image saved!')),
                 );
               },
-              child: const Text('Save'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 padding:
@@ -40,6 +39,7 @@ class MathSavePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
+              child: const Text('Save'),
             ),
           ],
         ),

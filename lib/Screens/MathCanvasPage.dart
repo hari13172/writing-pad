@@ -7,6 +7,8 @@ import 'package:math_expressions/math_expressions.dart';
 import 'package:new_app/Screens/MathSavePage.dart';
 
 class MathCanvasPage extends StatefulWidget {
+  const MathCanvasPage({super.key});
+
   @override
   _MathCanvasPageState createState() => _MathCanvasPageState();
 }
@@ -112,7 +114,7 @@ class _MathCanvasPageState extends State<MathCanvasPage> {
           ),
           const SizedBox(height: 20),
           Center(
-            child: Container(
+            child: SizedBox(
               height:
                   MediaQuery.of(context).size.height * 0.6, // 50vh equivalent
               child: RepaintBoundary(
@@ -160,7 +162,6 @@ class _MathCanvasPageState extends State<MathCanvasPage> {
                 children: [
                   ElevatedButton(
                     onPressed: _clearCanvas,
-                    child: const Text('Clear Canvas'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
                       padding: const EdgeInsets.symmetric(
@@ -169,12 +170,11 @@ class _MathCanvasPageState extends State<MathCanvasPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    child: const Text('Clear Canvas'),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: _toggleEraserMode,
-                    child: Text(
-                        _isEraserMode ? 'Switch to Pen' : 'Switch to Eraser'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _isEraserMode ? Colors.red : Colors.blue,
                       padding: const EdgeInsets.symmetric(
@@ -183,11 +183,12 @@ class _MathCanvasPageState extends State<MathCanvasPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    child: Text(
+                        _isEraserMode ? 'Switch to Pen' : 'Switch to Eraser'),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: _submitCanvas,
-                    child: const Text('Submit'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       padding: const EdgeInsets.symmetric(
@@ -196,6 +197,7 @@ class _MathCanvasPageState extends State<MathCanvasPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    child: const Text('Submit'),
                   ),
                   const SizedBox(height: 20),
                 ],
@@ -236,7 +238,7 @@ class _CanvasPainter extends CustomPainter {
 class _CalculatorPopup extends StatefulWidget {
   final Function(String result) onResult;
 
-  _CalculatorPopup({required this.onResult});
+  const _CalculatorPopup({required this.onResult});
 
   @override
   State<_CalculatorPopup> createState() => _CalculatorPopupState();
@@ -330,11 +332,11 @@ class _CalculatorPopupState extends State<_CalculatorPopup> {
       children: buttons
           .map((label) => ElevatedButton(
                 onPressed: () => _onButtonPressed(label),
-                child: Text(label),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(50, 50),
                   backgroundColor: Colors.orangeAccent,
                 ),
+                child: Text(label),
               ))
           .toList(),
     );

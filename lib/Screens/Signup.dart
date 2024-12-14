@@ -39,7 +39,7 @@ class Signup extends StatelessWidget {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Student registered successfully!')),
+          const SnackBar(content: Text('Student registered successfully!')),
         );
         Navigator.pushReplacement(
           context,

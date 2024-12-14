@@ -102,7 +102,7 @@ class _PreviewPageState extends State<PreviewPage> {
         if (data['status'] == 'success') {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Answer saved successfully!")),
+              const SnackBar(content: Text("Answer saved successfully!")),
             );
             _navigateToNextPage();
           }
